@@ -16,7 +16,7 @@ app.use(
     express.static(path.join(__dirname, "public"))
 );
 
-
+let ipFilter = false;
 app.use(function (req, res, next) {
     var ip = req.connection.remoteAddress;
 
@@ -30,16 +30,19 @@ app.use(function (req, res, next) {
         "127.0.0.1",
 
         //Clement
-        "192.168.1.59",
+        "192.168.1.18",
 
         //David
-        "192.168.1.16"
+        "192.168.1.16",
+
+        //Thibault
+        "192.168.1.59"
     ];
 
 
     console.log(users[ip]);
     console.log(ip)
-    if (users.includes(ip)) {
+    if (ipFilter = true && users.includes(ip)) {
         console.log("ip authorized");
         let auth = true;
     } else {
@@ -66,8 +69,8 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(3000, () => {
-    console.log('listening on *:3000');
+server.listen(80, () => {
+    console.log('listening on *:80');
 });
 
 //.hactess

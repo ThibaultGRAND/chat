@@ -9,7 +9,15 @@ var input = document.getElementById('input');
 
 
 let room = [];
-let roomList = ["JavaScript", "Python", "C#"];
+// let roomList = ["JavaScript", "Python", "C#"];
+let roomList = []
+if(!roomList.length > 0){
+    document.querySelector('.rooms_list').parentElement.style.display = 'none';
+    document.querySelector('.container').classList.remove = 'roomListActive';
+}else{
+    document.querySelector('.roomList').style.display = 'block';
+    document.querySelector('.container').classList.add = 'roomListActive';
+}
 function getUsernamRooms () {
 let url = window.location.href
     console.log(window.location.href)

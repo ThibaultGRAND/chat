@@ -32,6 +32,13 @@ function getUserInfo(){
 let select = document.querySelector('select');
 //getRoom From other module but
 let roomList = ["JavaScript", "Python", "C#"];
+roomList = []
+if(!roomList.length > 0){
+    console.log(select)
+    console.log(select)
+    select.style.display = 'none';
+    document.querySelector('.roomLabel').style.display = 'none';
+}
 
 for(let i = 0; i < roomList.length; i++){
     let newRoom = document.createElement('option');
