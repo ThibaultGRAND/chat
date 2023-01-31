@@ -1,0 +1,8 @@
+{
+  "user": {
+    "id": 1,
+    "name": "John Doe",
+    "email": "jhondoe@gmail.com",
+    "created_at": "2015-01-01T00:00:00.000Z"
+  }
+}

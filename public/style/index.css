@@ -1,0 +1,63 @@
+*{
+    font-size: 1.1em;
+}
+
+form{
+    margin: 0 auto;
+    width: 400px;
+    padding: 1em;
+    border: 1px solid #CCC;
+    border-radius: 1em;
+    background: whitesmoke;
+    min-height: 10em;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Path: public\style\index.css */
+label{
+    display: inline-block;
+    text-align: right;
+}
+
+input{
+    margin-bottom: 0.5em;
+    padding: 0.5em;
+    border: 2px solid #1337a8;
+    border-radius: 10em;
+}
+
+button{
+    margin: 0.5em;
+    padding: 0.5em;
+    background: #CCC;
+    border: 1px solid #CCC;
+    border-radius: 0.5em;
+    cursor: pointer;
+}
+
+body{
+    height: 100vh;
+    font: 100% Helvetica, sans-serif;
+    background: #eee;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    flex-direction: column;
+    flex: auto;
+    align-items: center;
+    justify-content: center;
+}
+
+
+select{
+    margin-bottom: 0.5em;
+    padding: 0.5em;
+    cursor: pointer;
+    background: blue;
+    color: white;
+}

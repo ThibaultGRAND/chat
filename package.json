@@ -1,0 +1,15 @@
+{
+  "name": "chat-thib",
+  "version": "0.1.0",
+  "description": "Chat, In node server",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "author": "Thibault",
+  "license": "NONE",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.5.4"
+  }
+}
