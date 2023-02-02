@@ -5,6 +5,14 @@ const server = http.createServer(app);
 const {Server} = require("socket.io");
 const path = require("path");
 const io = new Server(server);
+// const fetch = require('node-fetch');
+
+
+// const emojiAPI = "7c1a000cde9aa741b8b826ded687743997aaca87";
+//
+// const emojiList = "https://emoji-api.com/emojis?access_key="+emojiAPI;
+// console.log(fetch(emojiList));
+//
 
 function next() {
     console.log("next");
@@ -17,42 +25,42 @@ app.use(
 );
 
 let ipFilter = false;
-app.use(function (req, res, next) {
-    var ip = req.connection.remoteAddress;
+if (ipFilter) {
+    app.use(function (req, res, next) {
+        var ip = req.connection.remoteAddress;
 
-    ip = ip.replace('::ffff:', '');
-    console.log('New connection from ' + ip);
+        ip = ip.replace('::ffff:', '');
+        console.log('New connection from ' + ip);
 
-    let users = [
-        //localhost
-        "192.168.1.20",
-        "::1",
-        "127.0.0.1",
+        let users = [
+            //localhost
+            "192.168.1.20",
+            "::1",
+            "127.0.0.1",
 
-        //Clement
-        "192.168.1.18",
+            //Clement
+            "192.168.1.18",
 
-        //David
-        "192.168.1.16",
+            //David
+            "192.168.1.16",
 
-        //Thibault
-        "192.168.1.59"
-    ];
-
-
-    console.log(users[ip]);
-    console.log(ip)
-    if (ipFilter = true && users.includes(ip)) {
-        console.log("ip authorized");
-        let auth = true;
-    } else {
-        console.log("ip not authorized");
-        let auth = false;
-    }
-});
+            //Thibault
+            "192.168.1.59"
+        ];
 
 
-// ipChecker()
+        console.log(ip)
+        if (users.includes(ip)) {
+            console.log("ip authorized");
+            let auth = true;
+        } else {
+            console.log("ip not authorized");
+            let auth = false;
+        }
+
+    });
+}
+
 
 io.on('connection', (socket) => {
     console.log('is connected');
