@@ -169,13 +169,18 @@ form{
     position: fixed;
     bottom: 0;
 }
-
+.botMessage{
+    text-align: center;
+    margin-left: auto ;
+    margin-right: auto ;
+    border-radius: 0.8em;
+}
 
 input:focus{
     outline: none;
 }
 
-li:has(.yourMessage){
+.yourMessageItem{
     right: 0;
     text-align: right;
     margin-right: 0;

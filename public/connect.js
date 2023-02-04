@@ -2,9 +2,6 @@ let form = document.querySelector('form');
 let input = document.querySelector('input');
 let bouton = document.querySelector('.btn');
 
-let users = [];
-let user = { id: 1, username: 'test', room: 'test' };
-users.push(user);
 let isConnected = false;
 bouton.addEventListener('click', (e) => {
     console.log("users");
@@ -13,7 +10,6 @@ bouton.addEventListener('click', (e) => {
         if(input.value) {
             isConnected = false;
             if (input.value === users[i].username) {
-                console.log(users[i].username);
                 isConnected = true;
             }
         }

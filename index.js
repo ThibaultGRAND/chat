@@ -1,3 +1,4 @@
+//Module
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -5,25 +6,13 @@ const server = http.createServer(app);
 const {Server} = require("socket.io");
 const path = require("path");
 const io = new Server(server);
-// const fetch = require('node-fetch');
 
 
-// const emojiAPI = "7c1a000cde9aa741b8b826ded687743997aaca87";
-//
-// const emojiList = "https://emoji-api.com/emojis?access_key="+emojiAPI;
-// console.log(fetch(emojiList));
-//
-
-function next() {
-    console.log("next");
-    io.emit('next');
-
-}
-
+//Static files
 app.use(
     express.static(path.join(__dirname, "public"))
 );
-
+//ipFilter (not working)
 let ipFilter = false;
 if (ipFilter) {
     app.use(function (req, res, next) {
@@ -62,28 +51,37 @@ if (ipFilter) {
 }
 
 
+
+//get username (not working)
+let users = []
+console.log(users)
+
+
 io.on('connection', (socket) => {
     console.log('is connected');
-    socket.on('is disconnect', () => {
-        console.log('is deconnected');
-    });
+    users.push(socket.id)
 });
 
-
+//Connection + message
 io.on('connection', (socket) => {
     socket.on('chat message', (username, msg) => {
         console.log(`${username} : ${msg}`);
         io.emit('chat message', username, msg);
     });
+    socket.on('added user', (user)=> {
+        console.log(user.username, user.socketId)
+        console.log('user added')
+        io.emit('added user', user)
+    })
 });
 
-server.listen(80, () => {
-    console.log('listening on *:80');
+//START SERVER
+let PORT = 80;
+server.listen(PORT, () => {
+    console.log('listening on :' + PORT);
 });
 
 //.hactess
 app.all('*', function (req, res) {
-
     res.redirect('/404.html');
 });
-

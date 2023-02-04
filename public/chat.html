@@ -2,23 +2,33 @@
 <html>
 <head>
     <title>Socket.IO chat</title>
-<link rel="stylesheet" href="style/chat.css">
+    <link rel="stylesheet" href="style/chat.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+          integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
 </head>
 <body>
 <nav>
     <ul class="rooms_list"></ul>
 </nav>
 <div class="container">
-<ul id="messages"></ul>
+    <ul id="messages"></ul>
     <div class="pos">
-<form id="form" action="">
-    <input placeholder="Type message here..." id="input" autocomplete="off"/>
-    <button>Send</button>
-</form>
+        <form id="form" action="">
+            <input placeholder="Type message here..." id="input" autocomplete="off"/>
+            <button>Send</button>
+        </form>
     </div>
 </div>
 <script src="/socket.io/socket.io.js"></script>
-<script src="/fetch/fetch.js"></script>
+<!--<script src="/fetch/fetch.js"></script>-->
 <script src="chat.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
+//socket
 var socket = io();
 
-
-
+//base value
 var messages = document.getElementById('messages');
 var form = document.getElementById('form');
 let userInput = document.getElementById('userInput');
@@ -9,14 +9,13 @@ let user = 'Anonymous';
 
 var input = document.getElementById('input');
 
-
+//API EMOJI
 // const emojiAPI = "7c1a000cde9aa741b8b826ded687743997aaca87";
 //
 // const emojiList = "https://emoji-api.com/emojis?access_key="+emojiAPI;
 // console.log(fetch(emojiList))
 
-let room = [];
-// let roomList = ["JavaScript", "Python", "C#"];
+//rooms
 let roomList = []
 if (!roomList.length > 0) {
     document.querySelector('.rooms_list').parentElement.style.display = 'none';
@@ -25,28 +24,42 @@ if (!roomList.length > 0) {
     document.querySelector('.rooms_list').parentElement.display = 'block';
     document.querySelector('.container').classList.add = 'roomListActive';
 }
-
-function getUsernamRooms() {
+//get username
+function getUsernamRooms(id) {
     let url = window.location.href
     url.split('username=')
     let splitedOne = url.split('username=')[1]
     let username = splitedOne.split('&')[0]
-    let rooms = splitedOne.split('room=')[1]
-    return username;
-
-
+    //let rooms = splitedOne.split('room=')[1]
+    username = {
+        username: username,
+        socketID: socket.id,
+        color: stringToColor(username)
+    }
+    return username
 }
 
-user = getUsernamRooms()
-form.addEventListener('submit', function (e) {
+//create user
+socket.on('connect', function (socket) {
+    user = getUsernamRooms(socket)
+    botMessage()
+    socket.emit('added user', user)
+})
+function getUsername(user) {
+    return user.username
+}
 
+//envoie de message
+form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (input.value) {
-        socket.emit('chat message', user, input.value);
+        //envoie du message au serveur
+        let username = getUsername(user)
+        socket.emit('chat message', username, input.value);
         input.value = '';
     }
 });
-
+//FUNCTIONS BASE
 function stringToColor(str) {
     var hash = 0;
     for (var i = 0; i < str.length; i++) {
@@ -84,11 +97,7 @@ function timeStamper() {
 }
 
 hexToRgbA('#fbafff')
-let loggedUsername = getUsernamRooms()
-
-let UsernameColor = new Object()
-
-
+let loggedUsername = getUsername(user)
 function getOpositeColor(rgb) { // Like this : rgb(0, 0, 0);
     while (rgb.indexOf(' ') != -1) rgb = rgb.replace(' ', '');
     //Check if is formatted as RGB
@@ -105,93 +114,106 @@ function getOpositeColor(rgb) { // Like this : rgb(0, 0, 0);
     }
     return -1;
 }
-function LightenDarkenColor(col,amt) {
+
+function LightenDarkenColor(col, amt) {
     var usePound = false;
-    if ( col[0] == "#" ) {
+    if (col[0] == "#") {
         col = col.slice(1);
         usePound = true;
     }
 
-    var num = parseInt(col,16);
+    var num = parseInt(col, 16);
 
     var r = (num >> 16) + amt;
 
-    if ( r > 255 ) r = 255;
-    else if  (r < 0) r = 0;
+    if (r > 255) r = 255;
+    else if (r < 0) r = 0;
 
     var b = ((num >> 8) & 0x00FF) + amt;
 
-    if ( b > 255 ) b = 255;
-    else if  (b < 0) b = 0;
+    if (b > 255) b = 255;
+    else if (b < 0) b = 0;
 
     var g = (num & 0x0000FF) + amt;
 
-    if ( g > 255 ) g = 255;
-    else if  ( g < 0 ) g = 0;
+    if (g > 255) g = 255;
+    else if (g < 0) g = 0;
 
-    return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
+    return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
 }
+//END FUNCTIONS BASE
 
+
+//Create LI for message
 socket.on('chat message', function (username, msg) {
-    let usernameNow = username
-    var item = document.createElement('li');
-    var itemSpan = document.createElement('span');
-    let userMessage = username
-    if (UsernameColor.usernameNow) {
-        itemSpan.style.color = UsernameColor.usernameNow
+    console.log(username)
+    if (username === 'Bot') {
+        let item = document.createElement('li');
+        let itemSpan = document.createElement('span');
+        itemSpan.classList.add('botMessageSpan')
+        itemSpan.innerHTML = username;
+        item.textContent = msg;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+        item.classList.add('botMessage')
     } else {
-        let userNameColorNewValue = stringToColor(username)
-        userNameColorNewValue = hexToRgbA(userNameColorNewValue)
-        if (userNameColorNewValue) {
-            if (getOpositeColor(userNameColorNewValue) === "black") {
-                let newColorFinal = LightenDarkenColor(stringToColor(username), 80);
-                itemSpan.style.color = newColorFinal;
-            }else{
-                itemSpan.style.color = stringToColor(username);
+        let usernameNow = getUsername(user)
+        var item = document.createElement('li');
+        var itemSpan = document.createElement('span');
+        let userMessage = username
+        let UsernameColor = stringToColor(userMessage)
+        if (UsernameColor.usernameNow) {
+            itemSpan.style.color = user.color
+        } else {
+            let userNameColorNewValue = stringToColor(userMessage)
+            userNameColorNewValue = hexToRgbA(userNameColorNewValue)
+            if (userNameColorNewValue) {
+                if (getOpositeColor(userNameColorNewValue) === "black") {
+                    let newColorFinal = LightenDarkenColor(stringToColor(userMessage), 80);
+                    itemSpan.style.color = newColorFinal;
+                } else {
+                    itemSpan.style.color = stringToColor(userMessage);
+                }
             }
+        }
+        let spanClass2 = "NotYourMessage"
+        const usernameLog = getUsername(user)
+        console.log(userMessage, usernameLog)
+        if (userMessage === usernameLog) {
+            let spanClass = "yourMessage"
+            spanClass2 = "yourMessageItem"
+            itemSpan.classList.add(spanClass)
+            userMessage = "You"
+        }
+        let time = timeStamper()
+        let timeSpan = document.createElement('span');
+        timeSpan.classList.add('timeSpan')
+        timeSpan.innerHTML = time
+        itemSpan.textContent = userMessage + ": "
+        item.textContent = msg;
+        item.insertAdjacentElement('afterbegin', itemSpan);
+        item.insertAdjacentElement('beforeend', timeSpan);
+        item.classList.add(spanClass2)
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
     }
-}
-    let spanClass2 = "NotYourMessage"
-    if (userMessage === loggedUsername) {
-        let spanClass = "yourMessage"
-        spanClass2 = "yourMessageItem"
-        itemSpan.classList.add(spanClass)
-        usernameNow = "You"
-    }
 
+});
 
-// itemSpan.style.color = stringToColor(username);
-let time = timeStamper()
-let timeSpan = document.createElement('span');
-timeSpan.classList.add('timeSpan')
-timeSpan.innerHTML = time
-itemSpan.textContent = usernameNow + ": "
-item.textContent = msg;
-item.insertAdjacentElement('afterbegin', itemSpan);
-item.insertAdjacentElement('beforeend', timeSpan);
-item.classList.add(spanClass2)
-messages.appendChild(item);
-window.scrollTo(0, document.body.scrollHeight);
-
-
-})
-;
-
+//message du bot
 let botWelcome = [
     " est arriver, bienvenue a lui",
     " arrive surfez avec nous",
     " se prépare a taper sur son clavier"
 ]
-
-socket.on('connect', function (userConnected) {
+function botMessage() {
     WelcomeMessage = botWelcome[Math.floor(Math.random() * botWelcome.length)]
-    socket.emit('chat message', 'Bot', user  + WelcomeMessage  + "!");
-});
+    let username = getUsername(user)
+    socket.emit('chat message', 'Bot', username + WelcomeMessage + " !");
+}
 
-
+//affichage rooms
 let ul = document.querySelector('.rooms_list');
-
-
 for (let i = 0; i < roomList.length; i++) {
     let newRoom = document.createElement('li');
     newRoom.innerHTML = roomList[i];
