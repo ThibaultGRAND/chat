@@ -49,9 +49,15 @@ if (ipFilter) {
 
     });
 }
-
-
-
+let disconnectedUser = null;
+function getDisconnectedUser(id){
+    for(let i = 0; i < users.length; i++){
+        if(users[i].socketID === id){
+            disconnectedUser = users[i];
+        }
+    }
+    return disconnectedUser;
+}
 //get username (not working)
 let users = []
 console.log(users)
@@ -59,20 +65,39 @@ console.log(users)
 
 io.on('connection', (socket) => {
     console.log('is connected');
-    users.push(socket.id)
 });
-
+function removeitem(array, item) {
+    let index = array.indexOf(item);
+    if (index > -1) {
+        array.splice(index, 1);
+    }
+    return array;
+}
 //Connection + message
 io.on('connection', (socket) => {
     socket.on('chat message', (username, msg) => {
         console.log(`${username} : ${msg}`);
         io.emit('chat message', username, msg);
     });
+
     socket.on('added user', (user)=> {
-        console.log(user.username, user.socketId)
         console.log('user added')
-        io.emit('added user', user)
+        console.log(user.username)
+        users.push(user)
+        console.log(users)
+        //io.emit('added user', user)
+        io.emit('refreshUsers', users)
     })
+
+    socket.on('disconnect', () => {
+        let disocoUser = getDisconnectedUser(socket.id)
+        users = removeitem(users, disocoUser)
+        console.log(users)
+        console.log(disocoUser.username + ' is disconnected');
+
+        io.emit('user disconnected', disocoUser.username)
+        io.emit('refreshUsers', users)
+    });
 });
 
 //START SERVER

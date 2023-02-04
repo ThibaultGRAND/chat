@@ -16,6 +16,10 @@ var input = document.getElementById('input');
 // console.log(fetch(emojiList))
 
 //rooms
+
+
+
+
 let roomList = []
 if (!roomList.length > 0) {
     document.querySelector('.rooms_list').parentElement.style.display = 'none';
@@ -40,9 +44,10 @@ function getUsernamRooms(id) {
 }
 
 //create user
-socket.on('connect', function (socket) {
+socket.on('connect', function (NewUser) {
     user = getUsernamRooms(socket)
     botMessage()
+    console.log(user)
     socket.emit('added user', user)
 })
 function getUsername(user) {
@@ -146,6 +151,7 @@ function LightenDarkenColor(col, amt) {
 
 //Create LI for message
 socket.on('chat message', function (username, msg) {
+
     console.log(username)
     if (username === 'Bot') {
         let item = document.createElement('li');
@@ -156,6 +162,7 @@ socket.on('chat message', function (username, msg) {
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
         item.classList.add('botMessage')
+        item.classList.add("message")
     } else {
         let usernameNow = getUsername(user)
         var item = document.createElement('li');
@@ -176,6 +183,7 @@ socket.on('chat message', function (username, msg) {
                 }
             }
         }
+        let notif = true
         let spanClass2 = "NotYourMessage"
         const usernameLog = getUsername(user)
         console.log(userMessage, usernameLog)
@@ -194,6 +202,7 @@ socket.on('chat message', function (username, msg) {
         item.insertAdjacentElement('afterbegin', itemSpan);
         item.insertAdjacentElement('beforeend', timeSpan);
         item.classList.add(spanClass2)
+        item.classList.add("message")
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
     }
@@ -221,4 +230,30 @@ for (let i = 0; i < roomList.length; i++) {
 }
 
 
+//disconnect user
+socket.on('user disconnected', function (username) {
+    socket.emit('chat message', 'Bot', username + " est parti, a bientôt !");
+});
+
+
+//user list
+socket.on('refreshUsers', function (users) {
+    let ul = document.querySelector('#users');
+    ul.innerHTML = "";
+    for (let i = 0; i < users.length; i++) {
+        let newUser = document.createElement('li');
+        newUser.innerHTML = users[i].username;
+        newUser.classList.add('userItem')
+        newUser.style.color = users[i].color
+        ul.appendChild(newUser);
+    }
+});
+
+let Userbutton = document.querySelector('.user_list')
+Userbutton.addEventListener('click', function () {
+    console.log('click')
+    let users = document.querySelector('#users')
+    users.classList.toggle('usersShow')
+    users.classList.toggle('userHidden')
+})
 
