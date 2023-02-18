@@ -10,9 +10,7 @@ const io = new Server(server);
 //Static files
 app.use(
     express.static(path.join(__dirname, "public")),
-    express.static(path.join(__dirname, "fetch")),
-    express.static(path.join(__dirname, "socket.io")),
-    express.static(path.join(__dirname, "favicon.ico"))
+    express.static(path.dirname(__dirname) + '/socket.io/'),
 );
 
 
