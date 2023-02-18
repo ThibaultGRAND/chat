@@ -1,6 +1,7 @@
 //socket
 var socket = io();
 
+
 //base value
 var messages = document.getElementById('messages');
 var form = document.getElementById('form');
@@ -28,19 +29,30 @@ if (!roomList.length > 0) {
     document.querySelector('.rooms_list').parentElement.display = 'block';
     document.querySelector('.container').classList.add = 'roomListActive';
 }
+
+
+// function getUserColor (){
+//     let url = window.location.href
+//     let splitedOne = url.split('color=')[1]
+//     console.log(splitedOne)
+//     let color = splitedOne.replace('%', '#')
+//
+// }
 //get username
+
+
 function getUsernamRooms(id) {
     let url = window.location.href
     url.split('username=')
     let splitedOne = url.split('username=')[1]
     let username = splitedOne.split('&')[0]
     //let rooms = splitedOne.split('room=')[1]
-    username = {
+    user = {
         username: username,
         socketID: socket.id,
         color: stringToColor(username)
     }
-    return username
+    return user
 }
 
 //create user
@@ -64,6 +76,8 @@ form.addEventListener('submit', function (e) {
         input.value = '';
     }
 });
+
+
 //FUNCTIONS BASE
 function stringToColor(str) {
     var hash = 0;
@@ -244,16 +258,33 @@ socket.on('refreshUsers', function (users) {
         let newUser = document.createElement('li');
         newUser.innerHTML = users[i].username;
         newUser.classList.add('userItem')
-        newUser.style.color = users[i].color
+        let userColor = users[i].color
+        let userColorDef = document.createElement('div');
+        userColorDef.classList.add('userColor')
+        userColorDef.style.backgroundColor = userColor
+        newUser.insertAdjacentElement('afterbegin', userColorDef)
         ul.appendChild(newUser);
     }
 });
 
-let Userbutton = document.querySelector('.user_list')
-Userbutton.addEventListener('click', function () {
-    console.log('click')
+function removeUsersList(){
     let users = document.querySelector('#users')
     users.classList.toggle('usersShow')
     users.classList.toggle('userHidden')
+
+    let icon = document.querySelector('.iconGroupe')
+    icon.classList.toggle('fa-x')
+    icon.classList.toggle('fa-user-group')
+
+}
+
+let Userbutton = document.querySelector('.user_list')
+Userbutton.addEventListener('click', function () {
+    removeUsersList()
+})
+
+input.addEventListener('focus', function (e) {
+    users.classList.remove('usersShow')
+    users.classList.add('userHidden')
 })
 

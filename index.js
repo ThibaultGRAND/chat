@@ -7,11 +7,13 @@ const {Server} = require("socket.io");
 const path = require("path");
 const io = new Server(server);
 
-
 //Static files
 app.use(
-    express.static(path.join(__dirname, "public"))
+    express.static(path.join(__dirname, "public")),
+    express.static(path.join(__dirname, "fetch"))
 );
+
+
 //ipFilter (not working)
 let ipFilter = false;
 if (ipFilter) {
@@ -50,14 +52,16 @@ if (ipFilter) {
     });
 }
 let disconnectedUser = null;
-function getDisconnectedUser(id){
-    for(let i = 0; i < users.length; i++){
-        if(users[i].socketID === id){
+
+function getDisconnectedUser(id) {
+    for (let i = 0; i < users.length; i++) {
+        if (users[i].socketID === id) {
             disconnectedUser = users[i];
         }
     }
     return disconnectedUser;
 }
+
 //get username (not working)
 let users = []
 console.log(users)
@@ -66,6 +70,7 @@ console.log(users)
 io.on('connection', (socket) => {
     console.log('is connected');
 });
+
 function removeitem(array, item) {
     let index = array.indexOf(item);
     if (index > -1) {
@@ -73,6 +78,7 @@ function removeitem(array, item) {
     }
     return array;
 }
+
 //Connection + message
 io.on('connection', (socket) => {
     socket.on('chat message', (username, msg) => {
@@ -80,7 +86,7 @@ io.on('connection', (socket) => {
         io.emit('chat message', username, msg);
     });
 
-    socket.on('added user', (user)=> {
+    socket.on('added user', (user) => {
         console.log('user added')
         console.log(user.username)
         users.push(user)
@@ -107,6 +113,3 @@ server.listen(PORT, () => {
 });
 
 //.hactess
-app.all('*', function (req, res) {
-    res.redirect('/404.html');
-});
