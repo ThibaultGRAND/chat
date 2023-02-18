@@ -10,7 +10,6 @@ const io = new Server(server);
 //Static files
 app.use(
     express.static(path.join(__dirname, "public")),
-    express.static(path.dirname(__dirname) + '/socket.io/'),
 );
 
 
